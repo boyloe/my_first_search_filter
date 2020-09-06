@@ -1,8 +1,16 @@
 console.log("JavaScript loaded");
 
-baseURL = "http://localhost:3000";
-dogsURL = `${baseURL}/dogs`;
+const searchParams = new URLSearchParams(window.location.search)
+const nameSearch = searchParams.get('search')
+const ageSearch = searchParams.get('age')
 
+
+const baseURL = "http://localhost:3000";
+let dogsURL = `${baseURL}/dogs`;
+
+if(nameSearch || ageSearch) {
+  dogsURL = `${dogsURL}?nameSearch=${nameSearch}&ageSearch=${ageSearch}`;
+}
 const dogsSection = document.querySelector("section");
 
 fetch(dogsURL)
@@ -10,7 +18,13 @@ fetch(dogsURL)
   .then(displayDogs);
 
 function displayDogs(dogs) {
+  if (dogs.length > 0){
   dogs.forEach(showDog);
+  }else{
+    const noDog = document.createElement('p')
+    noDog.textContent = "I can't find any dogs that match!"
+    document.body.append(noDog)
+  }
 }
 
 function showDog(dog) {
